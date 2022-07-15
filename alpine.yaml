@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: alpine
+  name: alpine
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: alpine
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: alpine
+    spec:
+      containers:
+      - image: alpine:latest
+        command:
+          - /bin/sh
+          - "-c"
+          - "echo $MOUNTED_SECRET 60m"
+        imagePullPolicy: IfNotPresent
+        name: alpine
+        volumeMounts:
+        - mountPath: /var/secrets/
+          name: MOUNTED_SECRET        
+      volumes:
+      - name: MOUNTED_SECRET
+        secret:
+          defaultMode: 420
+          secretName: MOUNTED_SECRET      
