@@ -21,14 +21,18 @@ spec:
         command:
           - /bin/sh
           - "-c"
-          - "echo $MOUNTED_SECRET 60m"
+          - "echo $MOUNTED_SECRET"
+          - "echo $MOUNTED_SECRET"
         imagePullPolicy: IfNotPresent
         name: alpine
-        volumeMounts:
-        - mountPath: /var/secrets/
-          name: MOUNTED_SECRET        
-      volumes:
-      - name: MOUNTED_SECRET
-        secret:
-          defaultMode: 420
-          secretName: MOUNTED_SECRET      
+        env:
+        - name: password
+          valueFrom:
+            secretKeyRef:
+              name: mysecret
+              key: password
+        - name: username
+          valueFrom:
+            secretKeyRef:
+              name: mysecret
+              key: username              
